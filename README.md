@@ -36,31 +36,14 @@ Le code est divisé en 8 fichiers :
   *  classe *PTBPosTagger* : utilise le fichier contenant le format parenthésé pour tokeniser et POS tagger le texte brut.
 * **connTagger.py** : 
   *  méthode **main**,
-  *  classe abstraite *ConnTagger*. La méthode principale est la méthode **conntag( Document document )** qui récupère les exemples négatifs, explicites positifs et les exemples implicites, ie remplit des champs de *Stream document*,
+  *  classe abstraite *ConnTagger*. La méthode principale est la méthode **conntag( Document document )** qui récupère les exemples négatifs, explicites positifs et les exemples implicites, ie remplit des champs de *Document document*,
   *  classe *ConnTaggerFromModel*. La méthode **conntag( Document document )** applique les différents modèles pour identifier les connecteurs, les relations et la position des arguments (inter ou intraphrastique),
 * **segmenter.py** :
-  *  classe abstraite *Segmenter*. La méthode principale est la méthode **segment( Document document )** qui calcule les arguments pour les exemples explicites (positifs) et implicites si un fichier de parse est fourni. Récupère les informations suivantes : empan, texte et éventuellement adresses de gorn des arguments (selon la position inter/intra prédite). Les classes implémentant cette classe doivent uniquement redéfinir la méthode **get_span_intra(Mention mention)**, puisque ces informations se récupèrent toujours de la même façon si un argument est une phrase,
+  *  classe abstraite *Segmenter*. La méthode principale est la méthode **segment( Document document )** qui calcule les arguments pour les exemples explicites (positifs) et implicites si un fichier de parse est fourni. Récupère les informations suivantes : empan, texte et éventuellement adresses de gorn des arguments (selon la position inter/intra prédite). Les classes implémentant cette classe doivent uniquement redéfinir la méthode **get_span_intra( Mention mention )**, puisque ces informations se récupèrent toujours de la même façon si un argument est une phrase,
   *  classe *HeuristicSegmenter* : récupère les informations sur les arguments en utilisant une heuristique simpliste basée sur la position du connecteur.
 * **utils.py** : contient essentiellement des méthodes pour lire et écrire des fichiers.
 * **tree.py** : version (ancienne et/ou modifiée ?) de *nltk.tree*, on utilise la classe *ParentedTree* (permet de calculer des adresse de gorn, similaires à celles du PDTB).
 
-###### TODO
-
-* Dans le PDTB, il semble que le point final d'une phrase ne soit pas compris dans l'argument. Vérifier que c'est le cas pour les intra et les inter-phrastiques, et modifier le code pour faire la même chose.
-* Classe *DependencySegmenter*, basée sur une analyse en dépendance pour récupérer les arguments intra-phrastiques (en utilisant nltk.parse.malt).
-* Refaire entièrement la classe *Mention*, pour l'instant tout est une mention explicite (parce que la plupart des informations sont les mêmes, dans le PDTB les implicites on un connecteur qui a un empan et une adresse de gorn) ...
-* Vérifier ce qui n'est pas fait quand il n'y a pas de parse fourni (Pour l'instant ne segmente pas, normalement, ne devrait juste pas écrire de format PDTB.)
-* Ajouter les implicites dans les fichiers .annot.
-* Ajouter les arguments dans les fichiers .annot.
-* A vérifier, je pense que pour l'instant seul un MaxEnt fonctionne, à cause de la façon dont on récupère les scores.
-* Faire d'autres modèles.
-* Optimisation des paramètres des modèles.
-* Finir de mettre les tableaux infra en format markdown.
-* Regrouper la tonne de TODO qui est dans le code ...
-* Ajouter un parser (et extraire des traits syntaxiques).
-* Modifier dans certaines parties du code, confusion entre stream et document pour les noms de variables.
-* Ajouter des fichier de labels pour position et emploi.
-* Et bien sûr, ajouter lecture d'Annodis.
 
 ### Options
 * **-r** --raw (required) : un texte brut, au format une phrase par ligne, ou un répertoire de fichiers au même format ;
@@ -100,6 +83,25 @@ Si une analyse syntaxique est fournie, le programme crée en plus un répertoire
 * ces fichiers sont au format PDTB, donc on a les mêmes informations que dans les fichiers PDTB : adresses de gorn et empan du connecteur (gorn de la seconde phrase et start du premier token de la second phrase pour les implicites), adresses de gorn, empan et texte des arguments. Les informations de type "features" ne sont pas calculés, on a donc toujours les mêmes valeurs. Les relations des exemples implicites ne sont pas identifiées, on a donc toujours le connecteur "and" et la relation "Expansion" pour ces exemples ;
 * ils contiennent les exemples explicites (positifs) et les exemples implicites.
 * normalement donc, ils peuvent être lus par l'API PDTB, en lien avec le raw et le ptb.
+
+###### TODO
+
+* Dans le PDTB, il semble que le point final d'une phrase ne soit pas compris dans l'argument. Vérifier que c'est le cas pour les intra et les inter-phrastiques, et modifier le code pour faire la même chose.
+* Classe *DependencySegmenter*, basée sur une analyse en dépendance pour récupérer les arguments intra-phrastiques (en utilisant nltk.parse.malt).
+* Refaire entièrement la classe *Mention*, pour l'instant tout est une mention explicite (parce que la plupart des informations sont les mêmes, dans le PDTB les implicites on un connecteur qui a un empan et une adresse de gorn) ...
+* Vérifier ce qui n'est pas fait quand il n'y a pas de parse fourni (Pour l'instant ne segmente pas, normalement, ne devrait juste pas écrire de format PDTB.)
+* Ajouter les implicites dans les fichiers .annot.
+* Ajouter les arguments dans les fichiers .annot.
+* A vérifier, je pense que pour l'instant seul un MaxEnt fonctionne, à cause de la façon dont on récupère les scores.
+* Faire d'autres modèles.
+* Optimisation des paramètres des modèles.
+* Finir de mettre les tableaux infra en format markdown.
+* Regrouper la tonne de TODO qui est dans le code ...
+* Ajouter un parser (et extraire des traits syntaxiques).
+* Modifier dans certaines parties du code, confusion entre stream et document pour les noms de variables.
+* Ajouter des fichier de labels pour position et emploi.
+* Et bien sûr, ajouter lecture d'Annodis.
+
 
 # Données
 Le programme a besoin d'un certain nombre de ressources, toutes disponibles dans data/ressources/ :
@@ -165,7 +167,7 @@ Scores obtenus pour les différents modèles sur le test :
 * Pour le niveau 2, on donne des résultats en conservant les memes 11 relations que Lin (pour les implicites) et en conservant les 16 relations ;
 * Tous les modèles sont obtenus avec un MaxEnt (Scikit), L2, C=1.
 
-##### Modèle désambiguïsation en emploi
+### Modèle désambiguïsation en emploi
 
 
 ###### traits = connective
@@ -209,7 +211,7 @@ positive (1)  |	    136   	   |     787
 
 
 
-##### Modèle désambiguïsation en position 
+### Modèle désambiguïsation en position 
 
 
 ###### traits = connective
@@ -252,7 +254,7 @@ inter (1) 	  |  14    	       | 363
 
 
 
-##### Modèle désambiguïsation en relation niveau 1
+### Modèle désambiguïsation en relation niveau 1
 
 
 ###### traits = connective
@@ -303,7 +305,7 @@ Expansion-31 	|0         	|0            	|2            	|276
 
 
 
-##### Modèle désambiguïsation en relation niveau 2 Lin Rel
+### Modèle désambiguïsation en relation niveau 2 Lin Rel
 
 
 ###### traits = connective
@@ -388,7 +390,7 @@ List-43           	|0   |0 |  0 |  0 |  0 |  0|  0   |28 | 0  | 0  | 0 |  1
 
 
  
-##### Modèle désambiguïsation en relation niveau 2 All Rel
+### Modèle désambiguïsation en relation niveau 2 All Rel
 
 ###### traits = connective
 
