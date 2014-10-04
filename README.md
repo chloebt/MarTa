@@ -126,7 +126,14 @@ Dans *data/data2test/* se trouvent des donn√©es pour tester le programme, des r√
 Exemple, pas de fichier contenant le parse (tokenisation, pos tagging avec nltk), ne sort pas d'exemples implicites ni de format PDTB :
 
 ```
-python connectiveTagger/py/connTagger.py -r connectiveTagger/data/data2test/raw/00/wsj_0004 -e connectiveTagger/data/model_pdtb_postagFeats/model_emploi -f connectiveTagger/data/model_pdtb_postagFeats/correspondance_valnum2feat.txt -l connectiveTagger/data/labels_pdtb_level1.txt -c connectiveTagger/data/lex_conn_pdtb.txt -m connectiveTagger/data/model_pdtb_postagFeats/model_relation -s connectiveTagger/data/model_pdtb_postagFeats/model_position -o connectiveTagger/data/data2test/out/
+python connectiveTagger/py/connTagger.py -r connectiveTagger/data/data2test/raw/00/wsj_0004 
+-e connectiveTagger/data/model_pdtb_postagFeats/model_emploi 
+-f connectiveTagger/data/model_pdtb_postagFeats/correspondance_valnum2feat.txt 
+-l connectiveTagger/data/labels_pdtb_level1.txt 
+-c connectiveTagger/data/lex_conn_pdtb.txt 
+-m connectiveTagger/data/model_pdtb_postagFeats/model_relation 
+-s connectiveTagger/data/model_pdtb_postagFeats/model_position 
+-o connectiveTagger/data/data2test/out/
 ```
 
 Exemple, avec fichier contenant le parse :
