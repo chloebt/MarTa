@@ -16,30 +16,30 @@ Le programme tokenize et POS tag le fichier brut en entrée puis identifie les f
 Le code est divisé en 8 fichiers :
 
 * **stream.py** :
-  * Contient la classe *Document* représentant l'ensemble d'instances correspondant à un fichier raw. (Note : c'est aussi dans cette classe qu'on définit les répertoires en sortie, ie annot/, pdtb/),
-  * Contient la classe abstraite *Stream* représentant l'entrée du programme. La méthode principale est **read()** qui lit l'entrée et retourne une instance de Document par fichier raw,
-  * Contient la classe *FileSrc* : cas où l'entrée est un fichier,
-  * Contient la classe *PathSrc* : cas où l'entrée est un répertoire.
+  *  classe *Document* représentant l'ensemble d'instances correspondant à un fichier raw. (Note : c'est aussi dans cette classe qu'on définit les répertoires en sortie, ie annot/, pdtb/),
+  *  classe abstraite *Stream* représentant l'entrée du programme. La méthode principale est **read()** qui lit l'entrée et retourne une instance de Document par fichier raw,
+  *  classe *FileSrc* : cas où l'entrée est un fichier,
+  *  classe *PathSrc* : cas où l'entrée est un répertoire.
 * mention.py : **TODO** A refaire entièrement, pour l'instant tout est une instance explicite ...
-  * Contient la classe abstraite *Mention*,
-  * Contient la classe *ExplicitMention*, avec la méthode **feater()** qui calcule les traits pour la mention,
-  * Contient la classe *ImplicitMention* (non utilisée),
-  * Contient la classe *Connective* pour représenter un connecteur (non utilisée),
-  * Contient la classe *Argument* : représente un argument.
+  *  classe abstraite *Mention*,
+  *  classe *ExplicitMention*, avec la méthode **feater()** qui calcule les traits pour la mention,
+  *  classe *ImplicitMention* (non utilisée),
+  *  classe *Connective* pour représenter un connecteur (non utilisée),
+  *  classe *Argument* : représente un argument.
 * **tokenizer.py** :
-  * Contient la classe abstraite *Tokenizer*. La méthode principale est la méthode **tokenize( Stream document )** qui tokenize le texte brut, ie le champ *Stream.doc_tokenized_sents = liste de tuple (token, start, end)* avec *start..end* l'empan dans le texte brut,
-  * Contient la classe *NLTKTokenizer* qui tokenize le texte  brut en utilisant *nltk.tokenize.TreebankWordTokenizer*. N'est utilisé que si aucun de fichier d'analyse syntaxique n'est fourni.
+  *  classe abstraite *Tokenizer*. La méthode principale est la méthode **tokenize( Stream document )** qui tokenize le texte brut, ie le champ *Stream.doc_tokenized_sents = liste de tuple (token, start, end)* avec *start..end* l'empan dans le texte brut,
+  *  classe *NLTKTokenizer* qui tokenize le texte  brut en utilisant *nltk.tokenize.TreebankWordTokenizer*. N'est utilisé que si aucun de fichier d'analyse syntaxique n'est fourni.
 * **posTagger.py** :
-  * Contient la classe abstraite *POSTagger*. La méthode principale est la méthode **postag( Stream document )** qui récupère les POS des tokens, ie le champ *Stream.doc_postagged_sents = liste de tuple (token, POS, start, end)* avec *start..end* l'empan dans le texte brut,
-  * Contient la classe *NLTKPosTagger* : POS tag en utilisant *nltk.tag*,
-  * Contient la classe *PTBPosTagger* : utilise le fichier contenant le format parenthésé pour tokeniser et POS tagger le texte brut.
+  *  classe abstraite *POSTagger*. La méthode principale est la méthode **postag( Stream document )** qui récupère les POS des tokens, ie le champ *Stream.doc_postagged_sents = liste de tuple (token, POS, start, end)* avec *start..end* l'empan dans le texte brut,
+  *  classe *NLTKPosTagger* : POS tag en utilisant *nltk.tag*,
+  *  classe *PTBPosTagger* : utilise le fichier contenant le format parenthésé pour tokeniser et POS tagger le texte brut.
 * **connTagger.py** : 
-  * Contient la méthode **main**,
-  * Contient la classe abstraite *ConnTagger*. La méthode principale est la méthode **conntag(Stream document)** qui récupère les exemples négatifs, explicites positifs et les exemples implicites, ie remplit des champs de *Stream document*,
-  * Contient la classe dérivée *ConnTaggerFromModel*. La méthode **conntag(Stream document)** applique les différents modèles pour identifier les connecteurs, les relations et la position des arguments (inter ou intraphrastique) (**TODO** ne devrait être fait que s'il y a un parse, à vérifier),
+  *  méthode **main**,
+  *  classe abstraite *ConnTagger*. La méthode principale est la méthode **conntag(Stream document)** qui récupère les exemples négatifs, explicites positifs et les exemples implicites, ie remplit des champs de *Stream document*,
+  *  classe dérivée *ConnTaggerFromModel*. La méthode **conntag(Stream document)** applique les différents modèles pour identifier les connecteurs, les relations et la position des arguments (inter ou intraphrastique) (**TODO** ne devrait être fait que s'il y a un parse, à vérifier),
 * **segmenter.py** :
-  * Contient la classe abstraite *Segmenter*. La méthode principale est la méthode **segment( Stream document )** qui calcule les arguments pour les exemples explicites (positifs) et implicites si un fichier de parse est fourni (**TODO** : pourquoi en fait ? On ne peut pas faire le format PDTB mais on peut chercher les arguments, à modifier). Récupère les informations suivantes : empan, texte et éventuellement adresses de gorn des arguments (selon la position inter/intra prédite). Les classes implémentant cette classe doivent uniquement redéfinir la méthode **get_span_intra(Mention mention)**, puisque ces informations se récupèrent toujours de la même façon si un argument est une phrase,
-  * Contient la classe *HeuristicSegmenter* : récupère les informations sur les arguments en utilisant une heuristique simpliste basée sur la position du connecteur.
+  *  classe abstraite *Segmenter*. La méthode principale est la méthode **segment( Stream document )** qui calcule les arguments pour les exemples explicites (positifs) et implicites si un fichier de parse est fourni (**TODO** : pourquoi en fait ? On ne peut pas faire le format PDTB mais on peut chercher les arguments, à modifier). Récupère les informations suivantes : empan, texte et éventuellement adresses de gorn des arguments (selon la position inter/intra prédite). Les classes implémentant cette classe doivent uniquement redéfinir la méthode **get_span_intra(Mention mention)**, puisque ces informations se récupèrent toujours de la même façon si un argument est une phrase,
+  *  classe *HeuristicSegmenter* : récupère les informations sur les arguments en utilisant une heuristique simpliste basée sur la position du connecteur.
   * **TODO** : classe *DependencySegmenter*, basée sur une analyse en dépendance pour récupérer les arguments intra-phrastiques (en utilisant nltk.parse.malt, modèle malt déjà présent dans les ressources).
 * **utils.py** : contient essentiellement des méthodes pour lire et écrire des fichiers.
 * **tree.py** : version (ancienne et/ou modifiée ?) de *nltk.tree*, on utilise la classe ParentedTree (permet de calculer des adresse de gorn, similaires à celles du PDTB).
