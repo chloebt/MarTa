@@ -84,7 +84,7 @@ Si une analyse syntaxique est fournie, le programme crée en plus un répertoire
 * ils contiennent les exemples explicites (positifs) et les exemples implicites.
 * normalement donc, ils peuvent être lus par l'API PDTB, en lien avec le raw et le ptb.
 
-###### TODO
+### TODO
 
 * Dans le PDTB, il semble que le point final d'une phrase ne soit pas compris dans l'argument. Vérifier que c'est le cas pour les intra et les inter-phrastiques, et modifier le code pour faire la même chose.
 * Classe *DependencySegmenter*, basée sur une analyse en dépendance pour récupérer les arguments intra-phrastiques (en utilisant nltk.parse.malt).
