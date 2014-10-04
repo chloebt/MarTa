@@ -294,7 +294,7 @@ Weighted-Avg 	|95.4 	|95.1	|95.1	|None
 
 
 
-is/as        	Temporal-1	  |Contingency-6 |	Comparison-22 |	Expansion-31
+is/as        	|Temporal-1	  |Contingency-6 |	Comparison-22 |	Expansion-31
 ----------------|-------------|--------------|----------------|-------------
 Temporal-1   	|163       	|1            	|7            	|0
 Contingency-6	|23        	|150          	|0            	|2
